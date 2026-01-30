@@ -1,0 +1,532 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: subhan
+      changes:
+        - createTable:
+            tableName: brand
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: country
+                  type: varchar(255)
+              - column:
+                  name: founded_year
+                  type: integer
+              - column:
+                  name: trigger_column
+                  type: varchar(200)
+
+  - changeSet:
+      id: 2
+      author: subhan
+      changes:
+        - createTable:
+            tableName: model
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: brand_id
+                  type: integer
+                  constraints:
+                    nullable: true
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: year_from
+                  type: integer
+              - column:
+                  name: year_to
+                  type: integer
+        - addForeignKeyConstraint:
+            baseTableName: model
+            baseColumnNames: brand_id
+            referencedTableName: brand
+            referencedColumnNames: id
+            constraintName: fk_model_brand
+
+  - changeSet:
+      id: 3
+      author: subhan
+      changes:
+        - createTable:
+            tableName: car
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: model_id
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: vin
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: registration_number
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: mileage_km
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: production_year
+                  type: integer
+        - addForeignKeyConstraint:
+            baseTableName: car
+            baseColumnNames: model_id
+            referencedTableName: model
+            referencedColumnNames: id
+            constraintName: fk_car_model
+
+  - changeSet:
+      id: 4
+      author: subhan
+      changes:
+        - createTable:
+            tableName: cardetails
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: car_id
+                  type: integer
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: engine_number
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: registration_code
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: fuel_type
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: engine_capacity
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: color
+                  type: varchar(255)
+              - column:
+                  name: insurance_number
+                  type: varchar(255)
+        - addForeignKeyConstraint:
+            baseTableName: cardetails
+            baseColumnNames: car_id
+            referencedTableName: car
+            referencedColumnNames: id
+            constraintName: fk_car_details_car
+
+  - changeSet:
+      id: 5
+      author: subhan
+      changes:
+        - createTable:
+            tableName: service_visit
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: car_id
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: service_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: odometer_km
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: service_type
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: notes
+                  type: varchar(255)
+        - addForeignKeyConstraint:
+            baseTableName: service_visit
+            baseColumnNames: car_id
+            referencedTableName: car
+            referencedColumnNames: id
+            constraintName: fk_service_visit_car
+
+  - changeSet:
+      id: 6
+      author: subhan
+      changes:
+        - createTable:
+            tableName: part
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: part_code
+                  type: varchar(255)
+              - column:
+                  name: description
+                  type: varchar(255)
+              - column:
+                  name: unit_price
+                  type: numeric(10,2)
+              - column:
+                  name: brand
+                  type: varchar(255)
+
+  - changeSet:
+      id: 7
+      author: subhan
+      changes:
+        - createTable:
+            tableName: service_part
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: service_id
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: part_id
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: integer
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: service_part
+            baseColumnNames: service_id
+            referencedTableName: service_visit
+            referencedColumnNames: id
+            constraintName: fk_service_part_service_visit
+        - addForeignKeyConstraint:
+            baseTableName: service_part
+            baseColumnNames: part_id
+            referencedTableName: part
+            referencedColumnNames: id
+            constraintName: fk_service_part_part
+
+  - changeSet:
+      id: 8
+      author: subhan
+      changes:
+        - createTable:
+            tableName: feature
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: feature_id
+                  type: integer
+                  constraints:
+                    nullable: true
+                    unique: true
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: description
+                  type: varchar(255)
+              - column:
+                  name: category
+                  type: varchar(255)
+
+  - changeSet:
+      id: 9
+      author: subhan
+      changes:
+        - createTable:
+            tableName: car_feature
+            columns:
+              - column:
+                  name: car_id
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: feature_id
+                  type: integer
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: car_feature
+            columnNames: car_id, feature_id
+            constraintName: pk_car_feature
+        - addForeignKeyConstraint:
+            baseTableName: car_feature
+            baseColumnNames: car_id
+            referencedTableName: car
+            referencedColumnNames: id
+            constraintName: fk_car_feature_car
+        - addForeignKeyConstraint:
+            baseTableName: car_feature
+            baseColumnNames: feature_id
+            referencedTableName: feature
+            referencedColumnNames: id
+            constraintName: fk_car_feature_feature
+
+  - changeSet:
+      id: 10
+      author: subhan
+      changes:
+        - sql:
+            splitStatements: false
+            sql: |
+              create or replace function brand_update_trigger_fn()
+                  returns trigger
+                  language plpgsql
+              as
+              $$
+              begin
+                  new.trigger_column :=
+                          'UPDATED_AT_' || to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS');
+                  return new;
+              end;
+              $$;
+        - sql:
+            splitStatements: false
+            sql: |
+              drop trigger if exists brand_before_update_trigger on brand;
+              create trigger brand_before_update_trigger
+              before update on brand
+              for each row
+              execute procedure brand_update_trigger_fn();
+
+  - changeSet:
+      id: 11
+      author: subhan
+      changes:
+        - createTable:
+            tableName: app_user
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: username
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: full_name
+                  type: varchar(100)
+              - column:
+                  name: email
+                  type: varchar(100)
+                  constraints:
+                    unique: true
+              - column:
+                  name: password_hash
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_active
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+  - changeSet:
+      id: 12
+      author: subhan
+      changes:
+        - createTable:
+            tableName: role
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: description
+                  type: text
+
+  - changeSet:
+      id: 13
+      author: subhan
+      changes:
+        - createTable:
+            tableName: user_role
+            columns:
+              - column:
+                  name: user_id
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role_id
+                  type: integer
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: user_role
+            columnNames: user_id, role_id
+        - addForeignKeyConstraint:
+            baseTableName: user_role
+            baseColumnNames: user_id
+            referencedTableName: app_user
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName:
+        - addForeignKeyConstraint:
+            baseTableName: user_role
+            baseColumnNames: role_id
+            referencedTableName: role
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName:
+
+  - changeSet:
+      id: 14
+      author: subhan
+      changes:
+        - createTable:
+            tableName: permission
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: http_method
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: path_pattern
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: permission_code
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 15
+      author: subhan
+      changes:
+        - createTable:
+            tableName: role_permission
+            columns:
+              - column:
+                  name: role_id
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: permission_id
+                  type: integer
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: role_permission
+            columnNames: role_id, permission_id
+        - addForeignKeyConstraint:
+            baseTableName: role_permission
+            baseColumnNames: role_id
+            referencedTableName: role
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName:
+        - addForeignKeyConstraint:
+            baseTableName: role_permission
+            baseColumnNames: permission_id
+            referencedTableName: permission
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName:

@@ -17,6 +17,8 @@ public enum CarErrorEnum implements BaseErrorService {
 
     BRAND_NOT_FOUND("BRAND_NOT_FOUND-0001", "BRAND_NOT_FOUND", 404),
 
+    MODEL_NOT_FOUND("MODEL_NOT_FOUND-0001", "MODEL_NOT_FOUND", 404),
+
     /**
      * Custom error description case error.
      */

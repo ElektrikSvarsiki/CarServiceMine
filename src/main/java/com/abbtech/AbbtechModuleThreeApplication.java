@@ -10,5 +10,4 @@ public class AbbtechModuleThreeApplication {
         SpringApplication.run(AbbtechModuleThreeApplication.class, args);
     }
 
-
 }
